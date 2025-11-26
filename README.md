@@ -10,7 +10,7 @@ This project aims to forecast total weekly dengue cases for the two cities parti
 - **San Juan (SJ)**
 - **Iquitos (IQ)**
 
-The task is a **time-series regression problem**, where the goal is to predict `total_cases` for each `(city, year, weekofyear)` in the test dataset.  
+The task is a **regression problem**, where the goal is to predict `total_cases` for each `(city, year, weekofyear)` in the test dataset.  
 
 The project includes:
 - ✅ Data cleaning and preprocessing
@@ -172,5 +172,6 @@ The leaderboard evaluates submissions using **Mean Absolute Error (MAE)**.
 ## 📬 Author
 **Noor Fatima**  
 Aspiring Data Scientist
+
 
 
