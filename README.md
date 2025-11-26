@@ -27,8 +27,6 @@ The project includes:
 
 dengue-forcasting-ml-pipeline/
 
-│
-
 ├── data/ 
 
 │ ├── data_source/ # original dataset link
@@ -178,6 +176,7 @@ The model is evaluated using **Mean Absolute Error (MAE)**.
 ## 📬 Author
 **Noor Fatima**  
 Aspiring Data Scientist
+
 
 
 
