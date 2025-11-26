@@ -115,6 +115,7 @@ KNNImputer(n_neighbors=5)
 ### City Encoding
 
 - sj → 0
+- iq → 1
 
 Numeric encoding improves model compatibility.
 
@@ -187,3 +188,4 @@ In **Version 02**, the following tasks will be performed:
 This will help measure improvements gained through outlier removal.
 
 ---
+
