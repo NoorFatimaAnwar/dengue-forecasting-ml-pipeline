@@ -28,15 +28,18 @@ The project includes:
 dengue-forcasting-ml-pipeline/
 │
 ├── data/ 
+
 │ ├── data_source/ # original dataset link
-│ 
+
 ├── notebooks/ # all  Jupyter notebooks
+
 │ ├── 01_handle_missing_values.ipynb
 │ ├── 02_model_training_and_evaluation.ipynb
-│
+
 ├── reports/ # markdown reports for each step
+
 │ ├── version_01_missing_values.md
-│
+
 └── README.md
 
 
@@ -125,7 +128,7 @@ Saved as:
 Performed in `02_model_training.ipynb`.
 
 ### Train/Validation Split
-Because the test set has no labels, a **middle 20% time-based split** was created:
+Because the test set has no labels, a **middle 20% split** was created:
 - First part → training
 - Middle 20% → validation
 - Remaining → training
@@ -144,10 +147,9 @@ This preserves time-series order.
 - RMSE
 - R² Score
 
-*Results displayed using a formatted table.*
 
 ### 🎯 Performance Metric
-The leaderboard evaluates submissions using **Mean Absolute Error (MAE)**.
+The model is evaluated using **Mean Absolute Error (MAE)**.
 
 ---
 
@@ -162,9 +164,10 @@ The leaderboard evaluates submissions using **Mean Absolute Error (MAE)**.
 ---
 
 ## 📌 Future Improvements
+- Outliers removal
+- Scaling features
 - Hyperparameter tuning
 - Adding time-lag features
-- Using LSTM or Prophet for time-series modeling
 - Ensembling models
 
 ---
@@ -172,6 +175,7 @@ The leaderboard evaluates submissions using **Mean Absolute Error (MAE)**.
 ## 📬 Author
 **Noor Fatima**  
 Aspiring Data Scientist
+
 
 
 
