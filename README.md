@@ -1,136 +1,176 @@
-# 🧠 Student Academic Score Prediction -> Statistical Edition
+# 🌡️ Dengue Fever Prediction – Machine Learning Project
 
-## 📘 Project Overview
-This project explores how different lifestyle factors — including **sleep**, **exercise**, **social media use**, and **study habits** — influence students’ **academic performance**.  
-The updated version enhances the analysis by integrating **statistical testing methods** and **distribution checks** to validate findings scientifically.
+Predicting weekly dengue cases for **San Juan (SJ)** and **Iquitos (IQ)** using climate, weather, and vegetation data.
 
 ---
 
-## 🎯 Objective
-Analyze how lifestyle choices impact academic outcomes and identify which factors are statistically significant contributors to academic success.
+## 📌 Project Overview
+This project aims to forecast total weekly dengue cases for the two cities participating in the DrivenData challenge:
+
+- **San Juan (SJ)**
+- **Iquitos (IQ)**
+
+The task is a **time-series regression problem**, where the goal is to predict `total_cases` for each `(city, year, weekofyear)` in the test dataset.  
+
+The project includes:
+- ✅ Data cleaning and preprocessing
+- ✅ Missing value imputation
+- ✅ Feature renaming and transformation
+- ✅ Custom train-validation split
+- ✅ Model training & performance evaluation
+- ✅ Ready-to-use cleaned datasets (`train_df.csv`, `test_df.csv`)
 
 ---
 
-## 📊 Dataset Description
-The dataset (`students_lifestyle_5000.csv`) contains 5000 student records, including:
+## 📁 Repository Structure
 
-**Numerical Columns:**  
-Study_Hours_Per_Day, Sleep_Hours, Screen_Time_Hours, Physical_Activity_Hours, Social_Activity_Score, Mental_Wellbeing_Score, Attendance_Rate, Academic_Score, Age  
 
-**Categorical Columns:**  
-Gender, Stress_Level
+dengue-forcasting-ml-pipeline/
+│
+├── data/ 
+│ ├── data_source/ # original dataset link
+│ 
+├── notebooks/ # all  Jupyter notebooks
+│ ├── 01_handle_missing_values.ipynb
+│ ├── 02_model_training_and_evaluation.ipynb
+│
+├── reports/ # markdown reports for each step
+│ ├── version_01_missing_values.md
+│
+└── README.md
 
----
-
-## 🔍 Project Workflow
-
-### 1. Initial Exploration
-- Loaded and visualized raw data distributions.  
-- Identified missing values, outliers, and inconsistent category names.  
-- Explored gender and stress level distributions.  
-
-### 2. Data Cleaning
-- Used **KNN Imputer** for numerical columns with >5% missing values.  
-- Replaced missing categorical values (e.g., Stress_Level) using **mode imputation**.  
-- Standardized categorical entries (e.g., gender variants: “fmmale” → “female”).  
-- Removed and capped outliers using **IQR method** and **z-score analysis**.  
-
-### 3. Statistical Enhancements (New Section 🧮)
-This version adds **inferential statistics** to strengthen EDA insights.
-
-#### 📏 Normality & Distribution Analysis
-- **Shapiro-Wilk Test:** Checked if numerical columns follow normal distribution.  
-- **Skewness & Kurtosis:** Measured shape of data distribution.  
-- Found most variables approximately normal (|skew| < 0.5), suitable for parametric tests.  
-
-#### 📊 Outlier Detection
-- Applied **z-score method** to quantify outliers across multiple columns.  
-- Outliers > 3σ were replaced or capped at upper whiskers.  
-
-#### 🧠 Hypothesis Testing
-- **ANOVA (f_oneway):**  
-  Tested if mean Academic_Score differs across **genders** and **stress levels**.  
-  Found p < 0.05 → Significant differences exist between groups.  
-
-- **Pearson Correlation:**  
-  Used for normally distributed variables (Study_Hours, Sleep_Hours, etc.).  
-  Revealed **Study_Hours_Per_Day** has the strongest positive correlation with Academic_Score.  
-
-- **Spearman Correlation:**  
-  Used for non-normal variables (Physical_Activity_Hours).  
-  Showed no significant relationship with Academic_Score.  
-
-- **F-test (f_regression):**  
-  Validated relationship strength between categorical encodings (Stress_Level) and target variable.  
-
-#### 📈 Insights
-- Study hours and attendance rate show significant positive influence on academic score.  
-- Sleep and mental wellbeing have mild positive effects.  
-- Physical activity and screen time show negligible impact.  
-- Stress level and gender influence academic outcomes significantly.  
 
 ---
 
-## 📊 EDA Highlights
-- No major skew after cleaning.  
-- Heatmaps, scatterplots, and violin plots illustrate weak to moderate relationships.  
-- Correlation matrix confirms **Study_Hours_Per_Day ↔ Academic_Score (r ≈ 0.78)** as the strongest association.  
+## 📊 Problem Description
+The goal is to build a model that predicts:
+
+`total_cases` (integer)
+
+for each record in the test file.  
+
+The test data is a **future hold-out**, meaning it does not overlap with training data in time. Each row represents a specific week in a specific city:
+
+- `city` (sj or iq)
+- `year`
+- `weekofyear`
+
+The dataset combines features from:
+
+### 1️⃣ Weather Station (GHCN)
+- `station_max_temp_c`
+- `station_min_temp_c`
+- `station_avg_temp_c`
+- `station_precip_mm`
+- `station_diur_temp_rng_c`
+
+### 2️⃣ PERSIANN Satellite Precipitation
+- `precipitation_amt_mm`
+
+### 3️⃣ Reanalysis (NCEP CFSR)
+- `reanalysis_air_temp_k`
+- `reanalysis_dew_point_temp_k`
+- `reanalysis_relative_humidity_percent`
+- `reanalysis_specific_humidity_g_per_kg`
+- `reanalysis_precip_amt_kg_per_m2`
+- `reanalysis_max_air_temp_k`
+- `reanalysis_min_air_temp_k`
+- `reanalysis_avg_temp_k`
+- `reanalysis_tdtr_k`
+- `reanalysis_sat_precip_amt_mm`
+
+### 4️⃣ NDVI – Vegetation Index
+- `ndvi_ne`
+- `ndvi_nw`
+- `ndvi_se`
+- `ndvi_sw`
 
 ---
 
-## ⚙️ Feature Engineering
-- **Encoding:** Converted Gender and Stress_Level into dummy variables.  
-- **Scaling:** Applied **StandardScaler** to normalize numerical columns.  
-- **Train-Test Split:** 80-20 ratio for modeling readiness.  
+## ✨ Preprocessing Steps
+All preprocessing is performed inside `01_missing_values.ipynb`.
+
+### 1. Renaming Features
+Columns were renamed to more readable names such as:
+- `ndvi_ne` → `vegetation_ne`
+- `precipitation_amt_mm` → `satellite_precip_mm`
+
+
+### 2. Handling Missing Values
+Different strategies were applied based on feature type:
+
+- **Random Imputation**  
+  For NDVI vegetation features (small missing %, low correlation).
+
+- **KNN Imputation**  
+  For precipitation data (`satellite_precip_mm`).
+
+- **Median Imputation**  
+  For skewed climate features (humidity, dew point, temperature).
+
+*KDE plots were used to compare before vs after imputation.*
+
+### 3. City Encoding
+- `sj` → 0  
+- `iq` → 1
+
+### 4. Exporting Cleaned Data
+Saved as:
+- `train_df.csv`
+- `test_df.csv`
 
 ---
 
-## 📈 Key Learnings
-- Statistical validation adds reliability to EDA.  
-- ANOVA and correlation tests reveal hidden relationships beyond visual inspection.  
-- Outlier and normality checks ensure accurate, unbiased analysis.  
+## 🤖 Model Training & Evaluation
+Performed in `02_model_training.ipynb`.
+
+### Train/Validation Split
+Because the test set has no labels, a **middle 20% time-based split** was created:
+- First part → training
+- Middle 20% → validation
+- Remaining → training
+
+This preserves time-series order.
+
+### Models Tested
+- Linear Regression
+- Random Forest
+- Gradient Boosting
+- KNN Regressor
+- Support Vector Regressor (SVR)
+
+### Metrics
+- MAE
+- RMSE
+- R² Score
+
+*Results displayed using a formatted table.*
+
+### 🎯 Performance Metric
+The leaderboard evaluates submissions using **Mean Absolute Error (MAE)**.
 
 ---
 
-## 🧩 Technologies Used
-- **Python Libraries:** pandas, numpy, matplotlib, seaborn, scipy, sklearn  
-- **Statistical Methods:** ANOVA, Shapiro-Wilk, Pearson, Spearman, z-score, skewness, kurtosis  
-- **Tools:** Google Colab  
+## 🚀 How to Run This Project
+1. Upload raw dataset into Colab
+2. Run `01_missing_values.ipynb`  
+   This will generate:
+   - `train_df.csv`
+   - `test_df.csv`
+3. Upload the generated files and run `02_model_training.ipynb`
 
 ---
 
-## 🧠 Conclusion
-The statistical version of this project provides a more rigorous understanding of how students’ habits affect academic outcomes.  
-While study hours and attendance have the strongest positive impact, lifestyle balance (adequate sleep and moderate stress) remains essential for optimal performance.  
+## 📌 Future Improvements
+- Hyperparameter tuning
+- Adding time-lag features
+- Using LSTM or Prophet for time-series modeling
+- Ensembling models
 
 ---
 
-## 📁 Folder Structure
-
-Student_Lifestyle_Analysis/
-
-├── Academic_Score_Prediction_Statistical_Version/
-
-    ├── students_lifestyle_5000.csv
-
-    ├── Academic_Score_statists.ipynb
-
-    ├── README.md   
-
-└── Student_Academic_Score_Analysis/
-
-    ├── students_lifestyle_5000.csv
-    
-    ├── Academic_Score_EDA.ipynb
-    
-    ├── README.md
-
-# Run the Jupyter/Colab notebook
-Academic_Score_Statists.ipynb
-
----
-## 👩‍💻 Author
-
+## 📬 Author
 **Noor Fatima**  
-🎓 *Computer Science Student* | 💡 *Data Science Enthusiast*  
-📍 *Pakistan* 
+Aspiring Data Scientist
+
+
