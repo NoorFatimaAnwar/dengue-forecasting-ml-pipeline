@@ -26,7 +26,9 @@ The project includes:
 
 
 dengue-forcasting-ml-pipeline/
+
 │
+
 ├── data/ 
 
 │ ├── data_source/ # original dataset link
@@ -34,6 +36,7 @@ dengue-forcasting-ml-pipeline/
 ├── notebooks/ # all  Jupyter notebooks
 
 │ ├── 01_handle_missing_values.ipynb
+
 │ ├── 02_model_training_and_evaluation.ipynb
 
 ├── reports/ # markdown reports for each step
@@ -175,6 +178,7 @@ The model is evaluated using **Mean Absolute Error (MAE)**.
 ## 📬 Author
 **Noor Fatima**  
 Aspiring Data Scientist
+
 
 
 
